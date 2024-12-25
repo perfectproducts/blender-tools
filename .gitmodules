@@ -1,0 +1,4 @@
+[submodule "TRELLIS"]
+	path = TRELLIS
+	url = https://github.com/snowzurfer/TRELLIS.git
+	branch = runpod

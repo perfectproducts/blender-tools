@@ -1,0 +1,14 @@
+safetensors==0.4.5
+transformers==4.47.0
+diffusers==0.31.0
+huggingface-hub==0.27.0
+fastapi==0.109.2
+uvicorn==0.27.1
+python-multipart==0.0.9
+Pillow==10.2.0
+pydantic==2.6.1
+torch>=2.1.0 
+sentencepiece==0.2.0
+accelerate==1.2.0
+protobuf==5.29.1
+peft==0.14.0
