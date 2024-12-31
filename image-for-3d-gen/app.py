@@ -12,12 +12,14 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional
+from dummy_image_generator import DummyImageGenerator
 from image_generator import ImageGenerator
 
 app = FastAPI()
 
 # Initialize generator
-generator = ImageGenerator()
+generator = DummyImageGenerator()
+# generator = ImageGenerator()
 
 # Remove old initialization code and keep only the relevant parts
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -44,7 +46,17 @@ async def generate_image(request: GenerationRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
+        
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
+    
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    import argparse
+
+    parser = argparse.ArgumentParser(description='Run the image generation API server')
+    parser.add_argument('--port', type=int, default=8000, help='Port number to run the server on')
+    args = parser.parse_args()
+
+    uvicorn.run(app, host="0.0.0.0", port=args.port)

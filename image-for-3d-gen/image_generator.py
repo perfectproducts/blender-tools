@@ -7,11 +7,31 @@ from transformers import pipeline
 from huggingface_hub import hf_hub_download
 import os
 
+
+class ImageGeneratorDummy:
+    def __init__(self):
+        pass
+    
+    def generate(self, prompt, height=1024, width=1024, steps=8, scales=3.5, seed=None):
+        print(f"generate dummy image for {prompt}")
+        # generate dummy image
+        image = Image.new("RGB", (height, width), (255, 255, 255))
+        image_base64 = self.image_to_base64(image)
+        return {
+            "image_base64": image_base64,
+            "seed": 123456
+        }
+    
+    @staticmethod
+    def image_to_base64(image):
+        buffered = io.BytesIO()
+        image.save(buffered, format="PNG")
+        return base64.b64encode(buffered.getvalue()).decode()
+    
 class ImageGenerator:
     def __init__(self):
         # Initialize translator
-        self.translator = pipeline("translation", model="Helsinki-NLP/opus-mt-ko-en")
-        
+       
         # Initialize Flux pipeline
         self.pipe = FluxPipeline.from_pretrained(
             "black-forest-labs/FLUX.1-dev",
@@ -41,9 +61,6 @@ class ImageGenerator:
         return base64.b64encode(buffered.getvalue()).decode()
 
     def generate(self, prompt, height=1024, width=1024, steps=8, scales=3.5, seed=None):
-        # Translate if Korean
-        if self.contains_korean(prompt):
-            prompt = self.translator(prompt)[0]['translation_text']
         
         # Format prompt
         formatted_prompt = f"wbgmsst, 3D, {prompt} ,white background"
